@@ -20,9 +20,9 @@ export default function Edit( { attributes, setAttributes } ) {
     return (
         <>
             <InspectorControls>
-                <PanelBody title={ __( 'Settings', 'cjess-block-scaffold-experiment' ) }>
+                <PanelBody title={ __( 'Settings', 'jess-block-scaffold-experiment' ) }>
                     <TextControl
-                        label={ __( 'Category ID', 'cjess-block-scaffold-experiment' ) }
+                        label={ __( 'Category ID', 'jess-block-scaffold-experiment' ) }
                         value={ categoryId }
                         onChange={ ( value ) => setAttributes( { categoryId: value } ) }
                     />
