@@ -8,14 +8,9 @@
   "description": "Display your site's copyright date.",
   "example": {},
   "attributes": {
-    "fallbackCurrentYear": {
-      "type": "string"
-    },
-    "showStartingYear": {
-      "type": "boolean"
-    },
-    "startingYear": {
-      "type": "string"
+    "categoryId": {
+      "type": "string",
+      "default": "11"
     }
   },
   "supports": {
