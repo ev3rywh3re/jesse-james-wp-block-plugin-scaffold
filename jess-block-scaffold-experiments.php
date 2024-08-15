@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Jess - Block scaffold experiments
- * Description:       Display your site&#39;s copyright date.
+ * Description:       Some block scaffold experiments.
  * Version:           0.1.0
  * Requires at least: 6.2
  * Requires PHP:      7.0
@@ -52,23 +52,30 @@ add_action('rest_api_init', function() {
 /**
  * Callback function for the test REST endpoint.
  */
-function jess_dyn_rest($data) {
-	if ($data['id']) {
-		$response = 'Create return for ID: ' . $data['id'];
+function jess_dyn_rest($request) {
+	$id = $request->get_param('id');
 
-
-		$data = array( 'some', 'response', 'data' );
+	if ($id) {
+		// Fetch data based on the ID (replace with your actual data fetching logic)
+		$data = array(
+			'id' => $id,
+			'title' => 'Example Title',
+			'content' => 'Example Content',
+		);
 
 		// Create the response object
 		$response = new WP_REST_Response( $data );
 
-		// Add a custom status code
-		$response->set_status( 201 );
+		// Set the status code (200 for success)
+		$response->set_status( 200 );
 
-		// Add a custom header
-		$response->header( 'Location', 'http://swampthings.org/' );
 	} else {
-		$response = 'Create general return (no ID provided)';
+		// Create the response object
+		$response = new WP_REST_Response( array( 'message' => 'No ID provided' ) );
+
+		// Set the status code (400 for bad request)
+		$response->set_status( 400 );
 	}
+
 	return rest_ensure_response($response);
 }

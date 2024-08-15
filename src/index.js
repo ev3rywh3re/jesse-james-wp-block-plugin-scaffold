@@ -4,6 +4,11 @@
  * @see https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
  */
 import { registerBlockType } from '@wordpress/blocks';
+import { __ } from '@wordpress/i18n'; // Import for i18n
+import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
+import { useEffect, useState } from 'react';
+import { useFetch } from '@wordpress/api-fetch';
 
 /**
  * Internal dependencies
@@ -43,3 +48,9 @@ registerBlockType( metadata.name, {
 	 */
 	save,
 } );
+
+// Edit.js
+// (No changes needed in Edit.js)
+
+// Save.js
+// (No changes needed in Save.js)
