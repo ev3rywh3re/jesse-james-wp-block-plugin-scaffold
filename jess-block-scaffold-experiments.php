@@ -80,22 +80,20 @@ function jess_dyn_rest($request) {
 
 	return rest_ensure_response($response);
 }
-
 /**
- * Get an array of featured image URLs from posts in a specific category.
+ * Get an array of post IDs from a specific category that have featured images.
  *
  * @param int $category_id The ID of the category.
- * @param int $limit The maximum number of images to retrieve (default: 5).
  *
- * @return array An array of featured image URLs, or an empty array if no images are found.
+ * @return array An array of post IDs, or an empty array if no posts are found.
  */
-function jess_get_featured_images_by_category( $category_id, $limit = 5 ) {
-    $featured_images = [];
+function jess_get_post_ids_with_featured_image( $category_id ) {
+    $post_ids = [];
 
     // Query posts in the specified category
     $args = array(
         'cat' => $category_id,
-        'posts_per_page' => $limit,
+        'posts_per_page' => -1, // Retrieve all posts
         'meta_query' => array(
             array(
                 'key' => '_thumbnail_id', // Check for posts with a featured image
@@ -106,39 +104,63 @@ function jess_get_featured_images_by_category( $category_id, $limit = 5 ) {
 
     $query = new WP_Query( $args );
 
-    // Loop through the posts and get the featured image URLs
+    // Loop through the posts and get the post IDs
     if ( $query->have_posts() ) {
         while ( $query->have_posts() ) {
             $query->the_post();
-
-            $thumbnail_id = get_post_thumbnail_id();
-            if ( $thumbnail_id ) {
-                $featured_images[] = wp_get_attachment_image_url( $thumbnail_id, 'full' ); // Change 'full' to desired image size
-            }
+            $post_ids[] = get_the_ID();
         }
     }
 
     wp_reset_postdata(); // Reset the post data
 
-    return $featured_images;
+    return $post_ids;
+}
+
+/**
+ * Get the HTML for a featured image with figure and ARIA tags.
+ *
+ * @param int $post_id The ID of the post.
+ * @param string $size The desired image size (e.g., 'thumbnail', 'medium', 'large', 'full').
+ * @param string|array $attr Optional. Attributes for the <img> tag.
+ *
+ * @return string The HTML output for the featured image, or an empty string if no featured image is found.
+ */
+function jess_get_featured_image_html( $post_id, $size = 'medium', $attr = '' ) {
+    if ( has_post_thumbnail( $post_id ) ) {
+        $thumbnail_id = get_post_thumbnail_id( $post_id );
+        $image_alt = get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true );
+        $image_html = wp_get_attachment_image( $thumbnail_id, $size, false, array(
+            'alt' => $image_alt ? esc_attr( $image_alt ) : get_the_title( $post_id ),
+            $attr,
+        ) );
+
+        return '<figure aria-label="' . esc_attr( get_the_title( $post_id ) . ' Featured Image' ) . '">' . 
+               $image_html . 
+               '<figcaption>' . esc_html( get_the_title( $post_id ) ) . '</figcaption>' . 
+               '</figure>';
+    }
+
+    return ''; // Return an empty string if no featured image is found
 }
 
 
 /**
  * Output an array of featured image URLs from a specific category in the footer.
+ * 
+ * Current site portfolio category: 29453
  */
 function jess_output_featured_images_in_footer() {
-    $category_id = 15; // Replace with the desired category ID
-    $limit = 3; // Replace with the desired number of images
+    $category_id = 29453; // Replace with the desired category ID
+    $limit = -1; // Set to -1 to retrieve all images
 
-    $featured_images = jess_get_featured_images_by_category( $category_id, $limit );
+    $featured_images = jess_get_post_ids_with_featured_image( $category_id, $limit );
 
-    // Output the array in a script tag for JavaScript access
-    if ( ! empty( $featured_images ) ) {
-        echo '<pre>';
-        echo 'var featuredImages = ' . json_encode( $featured_images ) . ';';
-        echo '</pre>';
-    }
+	$one_random = array_rand( $featured_images );
+
+	echo jess_get_featured_image_html( $featured_images[$one_random] );
+
+
 }
 add_action( 'wp_footer', 'jess_output_featured_images_in_footer' );
 add_action( 'admin_footer', 'jess_output_featured_images_in_footer' );
