@@ -52,34 +52,37 @@ add_action('rest_api_init', function() {
 /**
  * Callback function for the test REST endpoint.
  */
+
+ 
 function jess_dyn_rest($request) {
-	$id = $request->get_param('id');
+    $id = $request->get_param('id');
 
-	if ($id) {
-		// Fetch data based on the ID (replace with your actual data fetching logic)
-		$data = array(
-			'categoryID' => $id,
-			'id' => $id,
-			'title' => 'Example Title',
-			'content' => 'Example Content',
-		);
+    if ($id) {
+        $featured_images_html = []; 
+        $post_ids = jess_get_post_ids_with_featured_image( $id );
 
-		// Create the response object
-		$response = new WP_REST_Response( $data );
+        foreach ( $post_ids as $post_id ) {
+            $featured_images_html[] = jess_get_featured_image_html( $post_id );
+        }
 
-		// Set the status code (200 for success)
-		$response->set_status( 200 );
+        $data = array(
+            'categoryID' => $id,
+            'images' => $featured_images_html, // Return array of image HTML
+        );
 
-	} else {
-		// Create the response object
-		$response = new WP_REST_Response( array( 'message' => 'No ID provided' ) );
+        $response = new WP_REST_Response( $data );
+        $response->set_status( 200 );
 
-		// Set the status code (400 for bad request)
-		$response->set_status( 400 );
-	}
+    } else {
+        $response = new WP_REST_Response( array( 'message' => 'No ID provided' ) );
+        $response->set_status( 400 );
+    }
 
-	return rest_ensure_response($response);
+    return rest_ensure_response($response);
 }
+
+
+
 /**
  * Get an array of post IDs from a specific category that have featured images.
  *
