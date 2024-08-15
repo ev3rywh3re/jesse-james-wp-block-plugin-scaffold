@@ -11,6 +11,7 @@ export default function Edit( { attributes, setAttributes } ) {
         const fetchData = async () => {
             const response = await fetch(`https://swampthings-local.ddev.site/wp-json/jess-block-scaffold-experiments/v1/open/${categoryId}`);
             const data = await response.json();
+            console.log(data);
             setApiData(data);
         };
 
