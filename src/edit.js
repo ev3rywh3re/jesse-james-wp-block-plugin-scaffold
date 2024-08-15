@@ -7,16 +7,29 @@ export default function Edit( { attributes, setAttributes } ) {
     const { categoryId } = attributes;
     const [apiData, setApiData] = useState(null);
 
+    // Move the fetch logic inside the useEffect callback
     useEffect(() => {
+        // Avoid fetching if categoryId is empty
+        if (!categoryId) {
+            return;
+        }
+
         const fetchData = async () => {
             const response = await fetch(`https://swampthings-local.ddev.site/wp-json/jess-block-scaffold-experiments/v1/open/${categoryId}`);
+            
+            if (!response.ok) {
+                console.error('Error fetching data:', response.status);
+                setApiData(null); // Clear previous data on error
+                return;
+            }
+
             const data = await response.json();
             console.log(data);
             setApiData(data);
         };
 
         fetchData();
-    }, [categoryId]);
+    }, [categoryId]); // Now useEffect runs whenever categoryId changes
 
     return (
         <>

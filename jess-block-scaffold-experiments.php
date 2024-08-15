@@ -58,6 +58,7 @@ function jess_dyn_rest($request) {
 	if ($id) {
 		// Fetch data based on the ID (replace with your actual data fetching logic)
 		$data = array(
+			'categoryID' => $id,
 			'id' => $id,
 			'title' => 'Example Title',
 			'content' => 'Example Content',
@@ -79,3 +80,4 @@ function jess_dyn_rest($request) {
 
 	return rest_ensure_response($response);
 }
+
