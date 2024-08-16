@@ -2,7 +2,7 @@
 
 ## Exactly what it is.
 
-This is just a repo for experimentation developing what are known as "WordPress block editor" tools. These are a combination of PHP, Javascript, CSS, JSON and other file types that combined create user interfaces and applications to display highly interactive content onWordPress sites. 
+This is just a repo for experimentation developing what are known as "WordPress block editor" tools. These are a combination of PHP, Javascript, CSS, JSON and other file types that combined create user interfaces and applications to display highly interactive content on WordPress sites.
 
 This project is in the form of a WordPress plugin using the install of the @wordpress/create-block package as a start. This does require familiarity with modern web application build systems. As always please review source documention of these projects availble on [wordpress.org](http://wordpress.org). 
 
