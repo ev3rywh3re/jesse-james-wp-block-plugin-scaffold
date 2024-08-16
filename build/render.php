@@ -14,20 +14,17 @@
 $current_year = date( "Y" );
 
 // Determine which content to display.
-if ( isset( $attributes['fallbackCurrentYear'] ) && $attributes['fallbackCurrentYear'] === $current_year ) {
+if ( isset( $attributes['categoryId'] ) ) {
 
-	// The current year is the same as the fallback, so use the block content saved in the database (by the save.js function).
-	$block_content = $content;
+    $limit = -1; // Set to -1 to retrieve all images
+
+    $featured_images = jess_get_post_ids_with_featured_image( $attributes['categoryId'], $limit );
+
+	$one_random = array_rand( $featured_images );
+
+	echo jess_get_featured_image_html( $featured_images[$one_random] );
+
 } else {
-
-	// The current year is different from the fallback, so render the updated block content.
-	if ( ! empty( $attributes['startingYear'] ) && ! empty( $attributes['showStartingYear'] ) ) {
-		$display_date = $attributes['startingYear'] . '–' . $current_year;
-	} else {
-		$display_date = $current_year;
-	}
-
-	$block_content = '<p ' . get_block_wrapper_attributes() . '>© ' . esc_html( $display_date ) . '</p>';
+	echo 'No category ID provided.';
 }
 
-echo wp_kses_post( $block_content );

@@ -3,7 +3,7 @@
   "apiVersion": 3,
   "name": "jess-block-scaffold-experiment/core",
   "version": "0.1.0",
-  "title": "Copyright Date Block",
+  "title": "Jess Block Scaffold Experiments",
   "category": "widgets",
   "description": "Display your site's copyright date.",
   "example": {},
