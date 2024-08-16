@@ -45,6 +45,8 @@ npm install @wordpress/i18n`
 
 ### commands:
 
+Taken from output and documentation for @wordpress/create-block.
+
 $ npm start
 Starts the build for development.
 
