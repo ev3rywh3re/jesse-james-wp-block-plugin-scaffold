@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Jess Block Scaffold Experiments",
   "category": "widgets",
-  "description": "Display your site's copyright date.",
+  "description": "Let's have some block fun.",
   "example": {},
   "attributes": {
     "categoryId": {
