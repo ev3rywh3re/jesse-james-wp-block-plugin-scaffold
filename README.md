@@ -88,3 +88,8 @@ npm run build
 The testing endpoint is at:
 
 https://example.com/wp-json/jess-block-scaffold-experiments/v1/open/{id}
+
+https://swampthings-local.ddev.site/wp-json/jess-block-scaffold-experiments/v1/open/{id}
+
+Error reslut test:
+https://swampthings-local.ddev.site/wp-json/jess-block-scaffold-experiments/v1/open/0
