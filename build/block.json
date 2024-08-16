@@ -11,6 +11,19 @@
     "categoryId": {
       "type": "string",
       "default": "11"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "default": ""
+        },
+        "alt": {
+          "type": "string",
+          "default": ""
+        }
+      }
     }
   },
   "supports": {

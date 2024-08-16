@@ -58,16 +58,20 @@ function jess_dyn_rest($request) {
     $id = $request->get_param('id');
 
     if ($id) {
-        $featured_images_html = []; 
+        $featured_images_html = ''; 
         $post_ids = jess_get_post_ids_with_featured_image( $id );
 
-        foreach ( $post_ids as $post_id ) {
-            $featured_images_html[] = jess_get_featured_image_html( $post_id );
-        }
+		print_r( $post_ids );
+		$random_image_id = array_rand( $post_ids );
+		$random_image = $post_ids[$random_image_id];
+		echo "$random_image is the random image";
+
+
+		$featured_images_html = jess_get_featured_image_html( $random_image );
 
         $data = array(
             'categoryID' => $id,
-            'images' => $featured_images_html, // Return array of image HTML
+            'image' => $featured_images_html, // Return array of image HTML
         );
 
         $response = new WP_REST_Response( $data );
