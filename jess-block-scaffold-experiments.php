@@ -61,10 +61,10 @@ function jess_dyn_rest($request) {
         $featured_images_html = ''; 
         $post_ids = jess_get_post_ids_with_featured_image( $id );
 
-		print_r( $post_ids );
+		// print_r( $post_ids );
 		$random_image_id = array_rand( $post_ids );
 		$random_image = $post_ids[$random_image_id];
-		echo "$random_image is the random image";
+		//echo "$random_image is the random image";
 
 
 		$featured_images_html = jess_get_featured_image_html( $random_image );
@@ -94,7 +94,7 @@ function jess_dyn_rest($request) {
  *
  * @return array An array of post IDs, or an empty array if no posts are found.
  */
-function jess_get_post_ids_with_featured_image( $category_id ) {
+ function jess_get_post_ids_with_featured_image( $category_id ) {
     $post_ids = [];
 
     // Query posts in the specified category
@@ -137,19 +137,26 @@ function jess_get_featured_image_html( $post_id, $size = 'medium', $attr = '' ) 
     if ( has_post_thumbnail( $post_id ) ) {
         $thumbnail_id = get_post_thumbnail_id( $post_id );
         $image_alt = get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true );
-        $image_html = wp_get_attachment_image( $thumbnail_id, $size, false, array(
-            'alt' => $image_alt ? esc_attr( $image_alt ) : get_the_title( $post_id ),
-            $attr,
-        ) );
+        $image_url = wp_get_attachment_image_url( $thumbnail_id, $size ); // Get image URL
+        $post_url = get_permalink( $post_id ); // Get post URL
+
+        // Wrap image and title in links
+        $image_html = '<a href="' . esc_url( $post_url ) . '">' . 
+                       wp_get_attachment_image( $thumbnail_id, $size, false, array(
+                           'alt' => $image_alt ? esc_attr( $image_alt ) : get_the_title( $post_id ),
+                           $attr,
+                       ) ) . 
+                       '</a>';
 
         return '<figure aria-label="' . esc_attr( get_the_title( $post_id ) . ' Featured Image' ) . '">' . 
                $image_html . 
-               '<figcaption>' . esc_html( get_the_title( $post_id ) ) . '</figcaption>' . 
+               '<figcaption><a href="' . esc_url( $post_url ) . '">' . esc_html( get_the_title( $post_id ) ) . '</a></figcaption>' . 
                '</figure>';
     }
 
     return ''; // Return an empty string if no featured image is found
 }
+
 
 
 /**
@@ -171,3 +178,17 @@ function jess_output_featured_images_in_footer() {
 }
 add_action( 'wp_footer', 'jess_output_featured_images_in_footer' );
 add_action( 'admin_footer', 'jess_output_featured_images_in_footer' );
+
+
+function jess_block_callback( $attributes ) {
+
+    $category_id = $attributes['categoryId'];
+    $limit = -1; // Set to -1 to retrieve all images
+
+    $featured_images = jess_get_post_ids_with_featured_image( $category_id, $limit );
+
+	$one_random = array_rand( $featured_images );
+
+	echo jess_get_featured_image_html( $featured_images[$one_random] );
+
+}
