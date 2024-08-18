@@ -176,8 +176,8 @@ function jess_output_featured_images_in_footer() {
 
 
 }
-add_action( 'wp_footer', 'jess_output_featured_images_in_footer' );
-add_action( 'admin_footer', 'jess_output_featured_images_in_footer' );
+//add_action( 'wp_footer', 'jess_output_featured_images_in_footer' );
+//add_action( 'admin_footer', 'jess_output_featured_images_in_footer' );
 
 
 function jess_block_callback( $attributes ) {
