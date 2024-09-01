@@ -1,58 +1,44 @@
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
-import { useEffect, useState } from 'react';
+import { PanelBody, SelectControl } from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit({ attributes, setAttributes }) {
     const { categoryId } = attributes;
-    const [apiData, setApiData] = useState(null);
 
-    // Move the fetch logic inside the useEffect callback
-    useEffect(() => {
-        // Avoid fetching if categoryId is empty
-        if (!categoryId) {
-            return;
-        }
-
-        const fetchData = async () => {
-            const response = await fetch(`https://swampthings-local.ddev.site/wp-json/jess-block-scaffold-experiments/v1/open/${categoryId}`);
-            
-            if (!response.ok) {
-                console.error('Error fetching data:', response.status);
-                setApiData(null); // Clear previous data on error
-                return;
-            }
-
-            const data = await response.json();
-            console.log(data);
-            setApiData(data);
+    // Fetch categories using useSelect
+    const { categories, isLoading } = useSelect((select) => {
+        const { getCategories, isGetCategoriesLoading } = select('core');
+        return {
+            categories: getCategories({ per_page: -1 }), // Fetch all categories
+            isLoading: isGetCategoriesLoading(),
         };
-
-        fetchData();
-    }, [categoryId]); // Now useEffect runs whenever categoryId changes
+    }, []);
 
     return (
         <>
             <InspectorControls>
-                <PanelBody title={ __( 'Settings', 'jess-block-scaffold-experiment' ) }>
-                    <TextControl
-                        label={ __( 'Category ID', 'jess-block-scaffold-experiment' ) }
-                        value={ categoryId }
-                        onChange={ ( value ) => setAttributes( { categoryId: value } ) }
-                    />
+                <PanelBody title={__('Settings', 'jess-block-scaffold-experiment')}>
+                    {isLoading ? (
+                        <p>Loading categories...</p>
+                    ) : (
+                        <SelectControl
+                            label={__('Category', 'jess-block-scaffold-experiment')}
+                            value={categoryId}
+                            options={[
+                                { value: '', label: 'Select a category' },
+                                ...categories.map((category) => ({
+                                    value: category.id,
+                                    label: category.name,
+                                })),
+                            ]}
+                            onChange={(value) => setAttributes({ categoryId: value })}
+                        />
+                    )}
                 </PanelBody>
             </InspectorControls>
-            <div { ...useBlockProps() }>
-                { apiData ? (
-                    <div>
-                        {/* Display fetched data here */}
-                        {/* Example: */}
-                        <p>Title: {apiData.title}</p>
-                        <p>Content: {apiData.content}</p>
-                    </div>
-                ) : (
-                    <p>Loading...</p>
-                )}
+            <div {...useBlockProps()}>
+                {/* ... rest of your block content ... */}
             </div>
         </>
     );
