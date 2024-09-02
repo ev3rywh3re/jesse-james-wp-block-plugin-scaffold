@@ -85,7 +85,10 @@ function jess_dyn_rest($request) {
     return rest_ensure_response($response);
 }
 
-
+// Function check to keep plugin and theme from conflicting - todo
+if function_exists('jess_get_post_ids_with_featured_image') {
+     die('jess_get_post_ids_with_featured_image already exists');
+}
 
 /**
  * Get an array of post IDs from a specific category that have featured images.
