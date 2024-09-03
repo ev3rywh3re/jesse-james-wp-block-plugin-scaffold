@@ -86,7 +86,7 @@ function jess_dyn_rest($request) {
 }
 
 // Function check to keep plugin and theme from conflicting - todo
-if function_exists('jess_get_post_ids_with_featured_image') {
+if ( function_exists('jess_get_post_ids_with_featured_image') ) {
      die('jess_get_post_ids_with_featured_image already exists');
 }
 
