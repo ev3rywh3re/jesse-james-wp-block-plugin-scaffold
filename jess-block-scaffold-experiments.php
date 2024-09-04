@@ -25,7 +25,21 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function create_block_copyright_date_block_init() {
-	register_block_type( __DIR__ . '/build' );
+
+    $block_dir = get_stylesheet_directory() . '/assets/blocks/';
+    $block_jess_block_plugin_scaffold_experiments_block = $block_dir . '/jesse-james-wp-block-plugin-scaffold/build/block.json';
+  
+      echo " TEST-1:" . $block_jess_block_plugin_scaffold_experiments_block;
+
+	// jess-block-scaffold-experiment/core
+    register_block_type( $block_jess_block_plugin_scaffold_experiments_block );
+
+    register_block_type( 'my-namespace/my-block', [
+        'editor_script' => 'my-block-editor',
+        'editor_style' => 'my-block-editor',
+        'style' => 'my-block',
+        ] );
+
 }
 add_action( 'init', 'create_block_copyright_date_block_init' );
 
@@ -85,23 +99,6 @@ function jess_dyn_rest($request) {
     return rest_ensure_response($response);
 }
 
-// Function check to keep plugin and theme from conflicting - todo
-if ( function_exists('jess_get_post_ids_with_featured_image') ) {
-
-    $apl = get_option('active_plugins');
-    $plugins = get_plugins();
-    $activated_plugins = array();
-    foreach ($apl as $p){           
-        if(isset($plugins[$p])){
-             array_push($activated_plugins, $plugins[$p]);
-        }           
-    }
-
-    print_r($activated_plugins);
-
-
-     exit('jess_get_post_ids_with_featured_image already exists');
-}
 
 /**
  * Get an array of post IDs from a specific category that have featured images.
