@@ -87,7 +87,20 @@ function jess_dyn_rest($request) {
 
 // Function check to keep plugin and theme from conflicting - todo
 if ( function_exists('jess_get_post_ids_with_featured_image') ) {
-     die('jess_get_post_ids_with_featured_image already exists');
+
+    $apl = get_option('active_plugins');
+    $plugins = get_plugins();
+    $activated_plugins = array();
+    foreach ($apl as $p){           
+        if(isset($plugins[$p])){
+             array_push($activated_plugins, $plugins[$p]);
+        }           
+    }
+
+    print_r($activated_plugins);
+
+
+     exit('jess_get_post_ids_with_featured_image already exists');
 }
 
 /**
