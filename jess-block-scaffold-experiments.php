@@ -26,22 +26,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function create_block_copyright_date_block_init() {
 
-    $block_dir = get_stylesheet_directory() . '/assets/blocks/';
-    $block_jess_block_plugin_scaffold_experiments_block = $block_dir . '/jesse-james-wp-block-plugin-scaffold/build/block.json';
-  
-      echo " TEST-1:" . $block_jess_block_plugin_scaffold_experiments_block;
+    $block_location = __DIR__ . '/build';
 
-	// jess-block-scaffold-experiment/core
-    register_block_type( $block_jess_block_plugin_scaffold_experiments_block );
+    //echo "TEST-1:" . $block_location;
+    //echo "TEST-2:" . is_dir( $block_location )  ;
 
-    register_block_type( 'my-namespace/my-block', [
-        'editor_script' => 'my-block-editor',
-        'editor_style' => 'my-block-editor',
-        'style' => 'my-block',
-        ] );
+    register_block_type( $block_location );
 
 }
 add_action( 'init', 'create_block_copyright_date_block_init' );
+add_action( 'admin_init', 'create_block_copyright_date_block_init' );
 
 /**
  * Create test REST endpoints for demonstration purposes.
@@ -99,6 +93,13 @@ function jess_dyn_rest($request) {
     return rest_ensure_response($response);
 }
 
+
+// Function check to keep plugin and theme from conflicting - todo
+/** 
+if ( function_exists('jess_get_post_ids_with_featured_image') ) {
+     exit('jess_get_post_ids_with_featured_image already exists');
+}
+*/
 
 /**
  * Get an array of post IDs from a specific category that have featured images.
