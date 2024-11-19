@@ -2,11 +2,7 @@
 
 ## Exactly what it is.
 
-This is just a repo for experimentation developing what are known as "WordPress block editor" tools. These are a combination of PHP, Javascript, CSS, JSON and other file types that combined create user interfaces and applications to display highly interactive content on WordPress sites.
-
-This project is in the form of a WordPress plugin using the install of the @wordpress/create-block package as a start. This does require familiarity with modern web application build systems. As always please review source documention of these projects availble on [wordpress.org](http://wordpress.org). 
-
-My goal is to have this in a working state as a WordPress plugin, so it can be installed and activated for learning and experimentation. If this project is current it should work with the currently available version of WordPress.
+The base of this project is located at: https://github.com/ev3rywh3re/jesse-james-wp-block-plugin-scaffold
 
 ## Resources
 
@@ -36,12 +32,7 @@ npx @wordpress/create-block copyright-date-block --template @wordpress/create-bl
 
 **Some additional packages:**
 
-`npm install @wordpress/blocks
-npm install @wordpress/block-editor
-npm install @wordpress/components
-npm install @wordpress/data
-npm install@wordpress/api-fetch
-npm install @wordpress/i18n`
+`npm install @wordpress/blocks npm install @wordpress/block-editor npm install @wordpress/components npm install @wordpress/data npm install@wordpress/api-fetch npm install @wordpress/i18n`
 
 ### commands:
 
