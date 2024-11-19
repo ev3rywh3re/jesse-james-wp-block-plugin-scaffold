@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name:       Jess - Block scaffold experiments
+ * Plugin Name:       Jesse James Planck Animation Toolbox
  * Description:       Some block scaffold experiments.
  * Version:           0.1.0
  * Requires at least: 6.2
  * Requires PHP:      7.0
- * Author:            The WordPress Contributors
+ * Author:            Jesse James Planck
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       jess-block-scaffold-experiments
+ * Text Domain:       jesse-james-planck-animation-toolbox
  *
  * @package           create-block
  */
