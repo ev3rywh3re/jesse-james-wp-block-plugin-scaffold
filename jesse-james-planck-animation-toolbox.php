@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:       Jesse James Planck Animation Toolbox
  * Description:       Some block scaffold experiments.
@@ -13,8 +14,8 @@
  * @package           create-block
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
+if (! defined('ABSPATH')) {
+    exit; // Exit if accessed directly.
 }
 
 /**
@@ -24,70 +25,69 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function create_block_copyright_date_block_init() {
+function create_block_animation_block_init()
+{
 
     $block_location = __DIR__ . '/build';
 
     //echo "TEST-1:" . $block_location;
     //echo "TEST-2:" . is_dir( $block_location )  ;
 
-    register_block_type( $block_location );
-
+    register_block_type($block_location);
 }
-add_action( 'init', 'create_block_copyright_date_block_init' );
-add_action( 'admin_init', 'create_block_copyright_date_block_init' );
+add_action('init', 'create_block_animation_block_init');
+add_action('admin_init', 'create_block_animation_block_init');
 
 /**
  * Create test REST endpoints for demonstration purposes.
  */
-add_action('rest_api_init', function() {
+add_action('rest_api_init', function () {
 
-	register_rest_route('jess-block-scaffold-experiments/v1', '/open/(?P<id>\d+)', array(
-		'methods' => 'GET',
-		'callback' => 'jess_dyn_rest',
-		'permission_callback' => '__return_true', // Public
-		'args' => array(
-		  'id' => array(
-			'validate_callback' => function($param, $request, $key) {
-			  return is_numeric( $param );
-			}
-		  ),
-		),
-	  ) );
-
+    register_rest_route('jess-block-scaffold-experiments/v1', '/open/(?P<id>\d+)', array(
+        'methods' => 'GET',
+        'callback' => 'jess_dyn_rest',
+        'permission_callback' => '__return_true', // Public
+        'args' => array(
+          'id' => array(
+            'validate_callback' => function ($param, $request, $key) {
+                return is_numeric($param);
+            }
+          ),
+        ),
+      ));
 });
 
 /**
  * Callback function for the test REST endpoint.
  */
 
- 
-function jess_dyn_rest($request) {
+
+function jess_dyn_rest($request)
+{
     $id = $request->get_param('id');
 
     if ($id) {
-        $featured_images_html = ''; 
-        $post_ids = jess_get_post_ids_with_featured_image( $id );
+        $featured_images_html = '';
+        $post_ids = jess_get_post_ids_with_featured_image($id);
 
-		// print_r( $post_ids );
-		$random_image_id = array_rand( $post_ids );
-		$random_image = $post_ids[$random_image_id];
-		//echo "$random_image is the random image";
+        // print_r( $post_ids );
+        $random_image_id = array_rand($post_ids);
+        $random_image = $post_ids[$random_image_id];
+        //echo "$random_image is the random image";
 
 
-		$featured_images_html = jess_get_featured_image_html( $random_image );
+        $featured_images_html = jess_get_featured_image_html($random_image);
 
         $data = array(
             'categoryID' => $id,
             'image' => $featured_images_html, // Return array of image HTML
         );
 
-        $response = new WP_REST_Response( $data );
-        $response->set_status( 200 );
-
+        $response = new WP_REST_Response($data);
+        $response->set_status(200);
     } else {
-        $response = new WP_REST_Response( array( 'message' => 'No ID provided' ) );
-        $response->set_status( 400 );
+        $response = new WP_REST_Response(array( 'message' => 'No ID provided' ));
+        $response->set_status(400);
     }
 
     return rest_ensure_response($response);
@@ -95,7 +95,7 @@ function jess_dyn_rest($request) {
 
 
 // Function check to keep plugin and theme from conflicting - todo
-/** 
+/**
 if ( function_exists('jess_get_post_ids_with_featured_image') ) {
      exit('jess_get_post_ids_with_featured_image already exists');
 }
@@ -108,26 +108,27 @@ if ( function_exists('jess_get_post_ids_with_featured_image') ) {
  *
  * @return array An array of post IDs, or an empty array if no posts are found.
  */
- function jess_get_post_ids_with_featured_image( $category_id ) {
+function jess_get_post_ids_with_featured_image($category_id)
+{
     $post_ids = [];
 
     // Query posts in the specified category
     $args = array(
-        'cat' => $category_id,
-        'posts_per_page' => -1, // Retrieve all posts
-        'meta_query' => array(
-            array(
-                'key' => '_thumbnail_id', // Check for posts with a featured image
-                'compare' => 'EXISTS',
-            ),
-        ),
+       'cat' => $category_id,
+       'posts_per_page' => -1, // Retrieve all posts
+       'meta_query' => array(
+           array(
+               'key' => '_thumbnail_id', // Check for posts with a featured image
+               'compare' => 'EXISTS',
+           ),
+       ),
     );
 
-    $query = new WP_Query( $args );
+    $query = new WP_Query($args);
 
     // Loop through the posts and get the post IDs
-    if ( $query->have_posts() ) {
-        while ( $query->have_posts() ) {
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
             $query->the_post();
             $post_ids[] = get_the_ID();
         }
@@ -147,24 +148,25 @@ if ( function_exists('jess_get_post_ids_with_featured_image') ) {
  *
  * @return string The HTML output for the featured image, or an empty string if no featured image is found.
  */
-function jess_get_featured_image_html( $post_id, $size = 'medium', $attr = '' ) {
-    if ( has_post_thumbnail( $post_id ) ) {
-        $thumbnail_id = get_post_thumbnail_id( $post_id );
-        $image_alt = get_post_meta( $thumbnail_id, '_wp_attachment_image_alt', true );
-        $image_url = wp_get_attachment_image_url( $thumbnail_id, $size ); // Get image URL
-        $post_url = get_permalink( $post_id ); // Get post URL
+function jess_get_featured_image_html($post_id, $size = 'medium', $attr = '')
+{
+    if (has_post_thumbnail($post_id)) {
+        $thumbnail_id = get_post_thumbnail_id($post_id);
+        $image_alt = get_post_meta($thumbnail_id, '_wp_attachment_image_alt', true);
+        $image_url = wp_get_attachment_image_url($thumbnail_id, $size); // Get image URL
+        $post_url = get_permalink($post_id); // Get post URL
 
         // Wrap image and title in links
-        $image_html = '<a href="' . esc_url( $post_url ) . '">' . 
-                       wp_get_attachment_image( $thumbnail_id, $size, false, array(
-                           'alt' => $image_alt ? esc_attr( $image_alt ) : get_the_title( $post_id ),
+        $image_html = '<a href="' . esc_url($post_url) . '">' .
+                       wp_get_attachment_image($thumbnail_id, $size, false, array(
+                           'alt' => $image_alt ? esc_attr($image_alt) : get_the_title($post_id),
                            $attr,
-                       ) ) . 
+                       )) .
                        '</a>';
 
-        return '<figure aria-label="' . esc_attr( get_the_title( $post_id ) . ' Featured Image' ) . '">' . 
-               $image_html . 
-               '<figcaption><a href="' . esc_url( $post_url ) . '">' . esc_html( get_the_title( $post_id ) ) . '</a></figcaption>' . 
+        return '<figure aria-label="' . esc_attr(get_the_title($post_id) . ' Featured Image') . '">' .
+               $image_html .
+               '<figcaption><a href="' . esc_url($post_url) . '">' . esc_html(get_the_title($post_id)) . '</a></figcaption>' .
                '</figure>';
     }
 
@@ -175,34 +177,33 @@ function jess_get_featured_image_html( $post_id, $size = 'medium', $attr = '' ) 
 
 /**
  * Output an array of featured image URLs from a specific category in the footer.
- * 
+ *
  * Current site portfolio category: 29453
  */
-function jess_output_featured_images_in_footer() {
+function jess_output_featured_images_in_footer()
+{
     $category_id = 29453; // Replace with the desired category ID
     $limit = -1; // Set to -1 to retrieve all images
 
-    $featured_images = jess_get_post_ids_with_featured_image( $category_id, $limit );
+    $featured_images = jess_get_post_ids_with_featured_image($category_id, $limit);
 
-	$one_random = array_rand( $featured_images );
+    $one_random = array_rand($featured_images);
 
-	echo jess_get_featured_image_html( $featured_images[$one_random] );
-
-
+    echo jess_get_featured_image_html($featured_images[$one_random]);
 }
 //add_action( 'wp_footer', 'jess_output_featured_images_in_footer' );
 //add_action( 'admin_footer', 'jess_output_featured_images_in_footer' );
 
 
-function jess_block_callback( $attributes ) {
+function jess_block_callback($attributes)
+{
 
     $category_id = $attributes['categoryId'];
     $limit = -1; // Set to -1 to retrieve all images
 
-    $featured_images = jess_get_post_ids_with_featured_image( $category_id, $limit );
+    $featured_images = jess_get_post_ids_with_featured_image($category_id, $limit);
 
-	$one_random = array_rand( $featured_images );
+    $one_random = array_rand($featured_images);
 
-	echo jess_get_featured_image_html( $featured_images[$one_random] );
-
+    echo jess_get_featured_image_html($featured_images[$one_random]);
 }
