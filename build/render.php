@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP file to use when rendering the block type on the server to show on the front end.
  *
@@ -10,18 +11,14 @@
  * @see https://github.com/WordPress/gutenberg/blob/trunk/docs/reference-guides/block-api/block-metadata.md#render
  */
 
-
 // Determine which content to display.
-if ( isset( $attributes['categoryId'] ) ) {
-
+if (isset($attributes['categoryId'])) {
     $limit = -1; // Set to -1 to retrieve all images
-    $featured_images = jess_get_post_ids_with_featured_image( $attributes['categoryId'], $limit );
+    $featured_images = jess_get_post_ids_with_featured_image($attributes['categoryId'], $limit);
 
-	$one_random = array_rand( $featured_images );
+    $one_random = array_rand($featured_images);
 
-	echo jess_get_featured_image_html( $featured_images[$one_random] );
-
+    echo jess_get_featured_image_html($featured_images[$one_random]);
 } else {
-	echo 'No category ID provided.';
+    echo 'No category ID provided.';
 }
-
