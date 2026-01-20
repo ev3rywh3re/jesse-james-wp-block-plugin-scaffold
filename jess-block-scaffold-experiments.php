@@ -164,7 +164,7 @@ function jess_get_featured_image_html($post_id, $size = 'medium', $attr = '')
                        )) .
                        '</a>';
 
-        return '<figure aria-label="' . esc_attr(get_the_title($post_id) . ' Featured Image') . '">' .
+        return '<figure class="site-featured-image" aria-label="' . esc_attr(get_the_title($post_id) . ' Featured Image') . '">' .
                $image_html .
                '<figcaption><a href="' . esc_url($post_url) . '">' . esc_html(get_the_title($post_id)) . '</a></figcaption>' .
                '</figure>';
